@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using CoreCodeCamp.Controllers;
 using CoreCodeCamp.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Versioning;
+using Microsoft.AspNetCore.Mvc.Versioning.Conventions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -23,8 +26,24 @@ namespace CoreCodeCamp
       services.AddScoped<ICampRepository, CampRepository>();
 
       services.AddAutoMapper();
+      services.AddApiVersioning(pot =>
+      {
+          pot.AssumeDefaultVersionWhenUnspecified = true;
+          pot.DefaultApiVersion = new ApiVersion(1,1);
+          pot.ReportApiVersions = true;
+          pot.ApiVersionReader = new UrlSegmentApiVersionReader();
+          //pot.ApiVersionReader = ApiVersionReader.Combine(
+          //    new HeaderApiVersionReader(),
+          //    new QueryStringApiVersionReader("ver", "version"));
 
-      services.AddMvc()
+          pot.Conventions.Controller<TalksController>()
+          .HasApiVersion(new ApiVersion(1, 0))
+          .HasApiVersion(new ApiVersion(1, 1))
+          .Action(c => c.Delete(default(string), default(int)))
+            .MapToApiVersion(1, 1);
+      });
+
+      services.AddMvc(opt => opt.EnableEndpointRouting = false)
         .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
     }
 
