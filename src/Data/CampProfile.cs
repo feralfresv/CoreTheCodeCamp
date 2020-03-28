@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Text;  
 using System.Threading.Tasks;
 using AutoMapper;
 
@@ -13,7 +13,9 @@ namespace CoreCodeCamp.Data
         public CampProfile()
         {
             this.CreateMap<Camp, CampModel>()
-            .ForMember(cm => cm.Venue, o => o.MapFrom(m => m.Location.VenueName));
+            .ForMember(cm => cm.Venue, o => o.MapFrom(m => m.Location.VenueName))
+            .ReverseMap();
+
         }
     }
 }
