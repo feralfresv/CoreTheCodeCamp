@@ -88,7 +88,7 @@ namespace CoreCodeCamp.Controllers
                     new { moniker = model.Moniker });
 
                 if (string.IsNullOrWhiteSpace(location))
-                {
+                {   
                     return BadRequest("Could not use current moniker ");
                 }
 
@@ -97,7 +97,7 @@ namespace CoreCodeCamp.Controllers
                 _repository.Add(camp);
                 if (await _repository.SaveChangesAsync())
                 {
-                    return Created($"/api/camps/{camp.Moniker}", _mapper.Map<CampModel>(camp));
+                    return Created(location, _mapper.Map<CampModel>(camp));
                 }
             }
             catch (Exception)
@@ -143,8 +143,6 @@ namespace CoreCodeCamp.Controllers
                 {
                     return Ok("Eliminado");
                 }
-
-
             }
             catch (Exception)
             {
